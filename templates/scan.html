@@ -1,0 +1,127 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<h1 class="text-4xl font-bold text-rose-600 mb-8 text-center mt-10">Upload or Capture a Skin Image</h1>
+
+<!-- Form Start -->
+<form id="scanForm" method="POST" enctype="multipart/form-data" class="w-full max-w-xl mx-auto bg-white p-8 rounded-xl shadow-md border-2 border-dashed border-rose-400 flex flex-col items-center">
+  {% csrf_token %}
+
+  <!-- Upload from File -->
+  <label for="imageUpload" class="cursor-pointer text-center w-full py-4 hover:bg-rose-50 transition rounded-lg border border-dashed border-rose-300 mb-4">
+    <span class="text-rose-500 text-lg font-medium">Click to upload or drag & drop an image</span>
+    <input type="file" accept="image/*" id="imageUpload" name="image" class="hidden">
+  </label>
+
+  <p class="text-gray-500 my-4">OR</p>
+
+  <!-- Webcam Capture -->
+  <button id="startCamera" type="button" class="mb-4 bg-rose-400 hover:bg-rose-500 text-white px-4 py-2 rounded-full">Take Photo Using Camera</button>
+  <video id="video" width="100%" autoplay class="rounded-lg hidden mb-4"></video>
+  <button id="capture" type="button" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-full hidden">Capture Photo</button>
+
+  <!-- Hidden input to hold camera photo -->
+  <input type="hidden" name="camera_image" id="cameraImageData">
+
+  <!-- Image Preview -->
+  <div id="previewContainer" class="mt-6 hidden w-full">
+    <h2 class="text-lg font-semibold text-gray-700 mb-2">Preview:</h2>
+    <img id="imagePreview" src="" alt="Preview" class="w-full rounded-lg shadow-md">
+  </div>
+
+  <!-- Start Scanning Button -->
+  <button id="scanButton"
+    class="mt-8 bg-rose-500 text-white px-6 py-3 rounded-full font-semibold shadow-lg hover:bg-rose-600 transition disabled:opacity-50"
+    type="submit"
+    disabled>
+    Start Scanning
+  </button>
+
+  <!-- Show error if present -->
+  {% if error %}
+    <p class="text-red-600 mt-4">{{ error }}</p>
+  {% endif %}
+
+  <!-- Show results if present -->
+  {% if detections %}
+    <div class="mt-10 w-full">
+      <h2 class="text-xl font-bold text-rose-600 mb-4">Detection Results:</h2>
+      <ul class="space-y-4">
+        {% for d in detections %}
+          <li class="bg-rose-50 border-l-4 border-rose-400 p-4 rounded">
+            <p><strong>Allergy Type:</strong> {{ d.allergy_type }}</p>
+            <p><strong>Confidence:</strong> {{ d.confidence|floatformat:2 }}</p>
+            <p><strong>Treatment:</strong> {{ d.treatment }}</p>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+</form>
+<!-- Form End -->
+
+{% endblock content %}
+
+{% block scripts %}
+<script>
+  const imageInput = document.getElementById('imageUpload');
+  const imagePreview = document.getElementById('imagePreview');
+  const previewContainer = document.getElementById('previewContainer');
+  const scanButton = document.getElementById('scanButton');
+  const cameraImageData = document.getElementById('cameraImageData');
+
+  // File upload preview
+  imageInput.addEventListener('change', () => {
+    const file = imageInput.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        imagePreview.src = reader.result;
+        previewContainer.classList.remove('hidden');
+        scanButton.disabled = false;
+        cameraImageData.value = ''; // clear camera image data if any
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Camera capture
+  const startCameraBtn = document.getElementById('startCamera');
+  const video = document.getElementById('video');
+  const captureBtn = document.getElementById('capture');
+  let stream;
+
+  startCameraBtn.addEventListener('click', async () => {
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      video.srcObject = stream;
+      video.classList.remove('hidden');
+      captureBtn.classList.remove('hidden');
+      startCameraBtn.disabled = true;
+    } catch (err) {
+      alert('Camera access denied or not available.');
+    }
+  });
+
+  captureBtn.addEventListener('click', () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0);
+
+    const dataUrl = canvas.toDataURL('image/png');
+    imagePreview.src = dataUrl;
+    previewContainer.classList.remove('hidden');
+    scanButton.disabled = false;
+
+    // Store base64 image in hidden input
+    cameraImageData.value = dataUrl;
+
+    // Stop video stream
+    stream.getTracks().forEach(track => track.stop());
+    video.classList.add('hidden');
+    captureBtn.classList.add('hidden');
+  });
+</script>
+{% endblock scripts %}

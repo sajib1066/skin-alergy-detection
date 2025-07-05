@@ -18,12 +18,13 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from .views import HomePageView
+from .views import HomePageView, ScanPageView
 
 
 urlpatterns = [
     path('management/', admin.site.urls),
     path('', HomePageView.as_view(), name='home'),
+    path('scan/', ScanPageView.as_view(), name='scan'),
     path('auth/', include('customauth.urls')),
     path('dashboard/', include('dashboard.urls')),
 ]
