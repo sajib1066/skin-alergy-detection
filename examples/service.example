@@ -1,13 +1,13 @@
 [Unit]
-Description=django_boilerplate-uWSGI-instance
-After=network.target postgresql-11.service
+Description=skin_alergy_detection-uWSGI-instance
+After=network.target postgresql-14.service
 
 [Service]
 User=centos
 Group=nginx
-WorkingDirectory=/opt/django_boilerplate
-Environment="PATH=/opt/django_boilerplate/venv/bin"
-ExecStart=/opt/django_boilerplate/venv/bin/uwsgi --ini /opt/django_boilerplate/uwsgi/uwsgi.ini
+WorkingDirectory=/opt/skin_alergy_detection
+Environment="PATH=/opt/skin_alergy_detection/venv/bin"
+ExecStart=/opt/skin_alergy_detection/venv/bin/uwsgi --ini /opt/skin_alergy_detection/uwsgi/uwsgi.ini
 Restart=always
 KillSignal=SIGQUIT
 Type=notify
