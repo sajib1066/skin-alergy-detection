@@ -1,5 +1,5 @@
 """
-Logging settings for skin-alergy-detection project.
+Logging settings for skin_alergy_detection project.
 
 Must be at the same directory as the settings.py file.
 
@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.0/topics/logging/
 # PYTHON IMPORTS
 import os
 # PROJECT IMPORTS
-from skin-alergy-detection.local_settings import LOGS_DIR
+from skin_alergy_detection.local_settings import LOGS_DIR
 
 
 LOGGING = {
