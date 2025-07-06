@@ -9,7 +9,7 @@ class ScanHistoryAdmin(admin.ModelAdmin):
     search_fields = ('user__email', 'allergy_type')
     readonly_fields = ('scan_date',)
     ordering = ('-scan_date',)
-    
+
     fieldsets = (
         ('User Information', {
             'fields': ('user', 'scan_date')
@@ -21,4 +21,4 @@ class ScanHistoryAdmin(admin.ModelAdmin):
             'fields': ('image',),
             'classes': ('collapse',)
         }),
-    ) 
+    )
