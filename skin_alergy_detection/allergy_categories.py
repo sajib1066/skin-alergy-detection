@@ -17,8 +17,10 @@ ALLERGY_TREATMENTS = {
     "drug_reaction": "Stop the medication and consult a doctor immediately.",
     "heat_rash": "Keep skin cool and dry; use calamine lotion.",
     "miliaria": "Wear breathable clothing and avoid heat.",
-    "photoallergic_dermatitis": "Avoid sun exposure and use sunscreen.",
+    "photoallergic_dermatitis": ("Avoid sun exposure and use sunscreen."),
     "atopic_dermatitis": "Moisturize frequently and avoid allergens.",
     "dermatographism": "Avoid scratching; use antihistamines.",
-    "autoimmune_blistering_disease": "Requires immunosuppressive treatment; consult dermatologist."
+    "autoimmune_blistering_disease": (
+        "Requires immunosuppressive treatment; consult dermatologist."
+    )
 }

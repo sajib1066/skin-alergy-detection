@@ -1,0 +1,55 @@
+{% if messages %}
+<div id="message-container" class="fixed top-4 right-4 z-50 space-y-2">
+    {% for message in messages %}
+    <div class="message-item p-4 rounded-lg shadow-lg max-w-sm transform transition-all duration-300 opacity-0 translate-x-full"
+         data-message-type="{{ message.tags }}">
+        <div class="flex items-center justify-between">
+            <span class="message-text">{{ message }}</span>
+            <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white hover:text-gray-200">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const messageItems = document.querySelectorAll('.message-item');
+    
+    messageItems.forEach(function(item) {
+        const messageType = item.dataset.messageType;
+        
+        // Set background color based on message type
+        if (messageType === 'error') {
+            item.classList.add('bg-red-500', 'text-white');
+        } else if (messageType === 'warning') {
+            item.classList.add('bg-yellow-500', 'text-white');
+        } else if (messageType === 'success') {
+            item.classList.add('bg-green-500', 'text-white');
+        } else {
+            item.classList.add('bg-blue-500', 'text-white');
+        }
+        
+        // Animate in
+        setTimeout(function() {
+            item.classList.remove('opacity-0', 'translate-x-full');
+        }, 100);
+        
+        // Auto remove after 5 seconds
+        setTimeout(function() {
+            if (item.parentNode) {
+                item.classList.add('opacity-0', 'translate-x-full');
+                setTimeout(function() {
+                    if (item.parentNode) {
+                        item.remove();
+                    }
+                }, 300);
+            }
+        }, 5000);
+    });
+});
+</script>
+{% endif %} 

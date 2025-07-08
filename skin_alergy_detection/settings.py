@@ -98,6 +98,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     'customauth.apps.CustomauthConfig',
     'dashboard.apps.DashboardConfig',
+    'skin_alergy_detection.apps.SkinAlergyDetectionConfig',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -236,7 +237,9 @@ CACHES = {
 
 # Broker settings
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}  # 1 hour
+CELERY_BROKER_TRANSPORT_OPTIONS = {
+    'visibility_timeout': 3600  # 1 hour
+}
 
 # Task settings
 CELERY_ACCEPT_CONTENT = ['json']
